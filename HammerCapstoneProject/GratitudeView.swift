@@ -6,8 +6,15 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct GratitudeView: View {
+    @Query private var gratefulMoments: [GratefulMoment]
+    @Environment(\.modelContext) private var context
+    @State private var newGratefulMoment = ""
+    @State private var newStamp = Date.now
+    @State private var selectedGratefulMoment: GratefulMoment?
+    
     var body: some View {
         VStack{ 
             Text("Moments of Gratitude")
@@ -15,16 +22,30 @@ struct GratitudeView: View {
                 .fontWeight(.bold)
                 .foregroundColor(Color.blue)
             
-            DatePicker(selection: /*@START_MENU_TOKEN@*/.constant(Date())/*@END_MENU_TOKEN@*/, displayedComponents: .date, label: { TextField("What are you thankful for?", text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/) })
+            DatePicker(selection: $newStamp, displayedComponents: .date, label: { TextField("What are you thankful for?", text: $newGratefulMoment) })
             
             Button {
-                /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/ /*@END_MENU_TOKEN@*/
+                let newMoment = GratefulMoment(gratefulMoment: newGratefulMoment, gratefulStamp: newStamp)
+                context.insert(newMoment)
+                newGratefulMoment = ""
+                newStamp = Date.now
             } label: {
                 Text("Save Entry")
             }
            
             List {
-                /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Content@*/Text("Content")/*@END_MENU_TOKEN@*/
+                ForEach(gratefulMoments) { moment in
+                    HStack{
+                        Text(moment.gratefulMoment)
+                        Spacer()
+                        Text(moment.gratefulStamp, format: .dateTime.month(.wide).day().year())
+                    }
+                    //  end HStack
+                    .onTapGesture {
+                        selectedGratefulMoment = moment
+                    }
+                }
+                .onDelete(perform: deleteMoment)
             }
             //endList
         }
@@ -32,9 +53,18 @@ struct GratitudeView: View {
         .padding()
     }
     //end body
+    
+    func deleteMoment(at offsets: IndexSet) {
+        for index in offsets {
+            let momentToDelete = gratefulMoments[index]
+            context.delete(momentToDelete)
+        }
+    }
+    // end deleteFriend function
 }
 //end struct
 
 #Preview {
     GratitudeView()
+        .modelContainer(for: GratefulMoment.self, inMemory: true)
 }
