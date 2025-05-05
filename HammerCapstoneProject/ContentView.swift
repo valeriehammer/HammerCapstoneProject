@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
     
@@ -37,7 +38,7 @@ struct ContentView: View {
                             .padding(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15))
                             .frame(maxWidth: .infinity)
                             .background(Color.white)
-                            .foregroundColor(.blue)
+                            .foregroundColor(Color.blue)
                             .font(.title)
                             .clipShape(Capsule())
                     }
