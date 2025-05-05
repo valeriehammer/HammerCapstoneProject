@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    
     var body: some View {
         NavigationStack {
             ZStack{
@@ -27,7 +26,7 @@ struct ContentView: View {
                         .font(.title3)
                     
                         .fontWeight(.semibold)
-                        .foregroundColor(Color.white)
+                        .foregroundColor(Color(red: 0.003, green: 0.371, blue: 0.565))
                         .multilineTextAlignment(.center)
                     
                     
@@ -35,10 +34,11 @@ struct ContentView: View {
                     
                     
                     NavigationLink(destination: GratitudeView()) { Text("Add A Moment of Gratitude")
+                            .fontWeight(.medium)
                             .padding(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15))
                             .frame(maxWidth: .infinity)
-                            .background(Color.white)
-                            .foregroundColor(Color.blue)
+                            .background(Color(red: 0.003, green: 0.371, blue: 0.565))
+                            .foregroundColor(.white)
                             .font(.title)
                             .clipShape(Capsule())
                     }
@@ -47,10 +47,11 @@ struct ContentView: View {
                     
                     NavigationLink(destination: LessonsView()) {
                         Text("Add a Lesson Learned")
+                            .fontWeight(.medium)
                             .padding(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15))
                             .frame(maxWidth: .infinity)
-                            .background(Color.white)
-                            .foregroundColor(.orange)
+                            .background(Color(red: 0.003, green: 0.371, blue: 0.565))
+                            .foregroundColor(/*@START_MENU_TOKEN@*/Color(hue: 0.071, saturation: 0.208, brightness: 0.979)/*@END_MENU_TOKEN@*/)
                             .font(.title)
                             .clipShape(Capsule())
                         }
@@ -58,10 +59,11 @@ struct ContentView: View {
                     
                     NavigationLink(destination: EmotionView()) {
                         Text("Reflect on Emotions")
+                            .fontWeight(.medium)
                             .padding(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15))
                             .frame(maxWidth: .infinity)
-                            .background(Color.white)
-                            .foregroundColor(.teal)
+                            .background(Color(red: 0.003, green: 0.371, blue: 0.565))
+                            .foregroundColor(.orange)
                             .font(.title)
                             .clipShape(Capsule())
                         }

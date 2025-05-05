@@ -16,41 +16,44 @@ struct GratitudeView: View {
     @State private var selectedGratefulMoment: GratefulMoment?
     
     var body: some View {
-        VStack{ 
-            Text("Moments of Gratitude")
-                .font(.title)
-                .fontWeight(.bold)
-                .foregroundColor(Color.blue)
-            
-            DatePicker(selection: $newStamp, displayedComponents: .date, label: { TextField("What are you thankful for?", text: $newGratefulMoment) })
-            
-            Button {
-                let newMoment = GratefulMoment(gratefulMoment: newGratefulMoment, gratefulStamp: newStamp)
-                context.insert(newMoment)
-                newGratefulMoment = ""
-                newStamp = Date.now
-            } label: {
-                Text("Save Entry")
-            }
-           
-            List {
-                ForEach(gratefulMoments) { moment in
-                    HStack{
-                        Text(moment.gratefulMoment)
-                        Spacer()
-                        Text(moment.gratefulStamp, format: .dateTime.month(.wide).day().year())
-                    }
-                    //  end HStack
-                    .onTapGesture {
-                        selectedGratefulMoment = moment
-                    }
+        ZStack {
+            VStack{
+                Text("Moments of Gratitude")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundColor(Color.blue)
+                
+                DatePicker(selection: $newStamp, displayedComponents: .date, label: { TextField("What are you thankful for?", text: $newGratefulMoment) })
+                
+                Button {
+                    let newMoment = GratefulMoment(gratefulMoment: newGratefulMoment, gratefulStamp: newStamp)
+                    context.insert(newMoment)
+                    newGratefulMoment = ""
+                    newStamp = Date.now
+                } label: {
+                    Text("Save Entry")
                 }
-                .onDelete(perform: deleteMoment)
+                
+                List {
+                    ForEach(gratefulMoments) { moment in
+                        HStack{
+                            Text(moment.gratefulMoment)
+                            Spacer()
+                            Text(moment.gratefulStamp, format: .dateTime.month(.wide).day().year())
+                        }
+                        //  end HStack
+                        .onTapGesture {
+                            selectedGratefulMoment = moment
+                        }
+                    }
+                    .onDelete(perform: deleteMoment)
+                }
+                //endList
             }
-            //endList
+            //endVStack
+            .padding()
         }
-        //endVStack
-        .padding()
+        
     }
     //end body
     
