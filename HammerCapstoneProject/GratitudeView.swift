@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct GratitudeView: View {
-    @Query private var gratefulMoments: [GratefulMoment]
+    @Query(sort: \GratefulMoment.gratefulStamp, order: .reverse) private var gratefulMoments: [GratefulMoment]
     @Environment(\.modelContext) private var context
     @State private var newGratefulMoment = ""
     @State private var newStamp = Date.now

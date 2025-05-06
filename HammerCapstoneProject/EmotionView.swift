@@ -9,6 +9,12 @@ import SwiftUI
 import SwiftData
 
 struct EmotionView: View {
+    @Query(sort: \EmotionReflection.emotionStamp, order: .reverse) private var reflections: [EmotionReflection]
+    @Environment(\.modelContext) private var context
+    @State private var newReflection = ""
+    @State private var newEStamp = Date.now
+    @State private var selectedEmotionReflection: EmotionReflection?
+    
     var body: some View {
         ZStack{
             Color(.mint)
@@ -19,7 +25,7 @@ struct EmotionView: View {
                     .fontWeight(.bold)
                     .foregroundColor(/*@START_MENU_TOKEN@*/Color(hue: 0.071, saturation: 0.208, brightness: 0.979)/*@END_MENU_TOKEN@*/)
                 
-                DatePicker(selection: .constant(Date()), label: { TextField("How do you feel?", text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/) })
+                DatePicker(selection: $newEStamp, displayedComponents: .date, label: { TextField("How do you feel?", text: $newReflection) })
                         .frame(maxWidth: .infinity)
                         .padding(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15))
                         .background(Color.white)
@@ -28,7 +34,10 @@ struct EmotionView: View {
                    
                 
                 Button {
-                    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/ /*@END_MENU_TOKEN@*/
+                    let newEmotionReflection = EmotionReflection(emotionReflection: newReflection, emotionStamp: newEStamp)
+                    context.insert(newEmotionReflection)
+                    newReflection = ""
+                    newEStamp = Date.now
                 } label: {
                     Text("Save Entry")
                         .fontWeight(.medium)
@@ -38,10 +47,23 @@ struct EmotionView: View {
                         .clipShape(Capsule())
                 }
                 List {
-                    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Content@*/Text("Content")/*@END_MENU_TOKEN@*/
+                    ForEach(reflections) { reflection in
+                        HStack{
+                            Text(reflection.emotionReflection)
+                            Spacer()
+                            Text(reflection.emotionStamp, format: .dateTime.month(.wide).day().year())
+                        }
+                        .onTapGesture {
+                            selectedEmotionReflection = reflection
+                        }
+                        //endHStack
+                    }
+                    .onDelete(perform: deleteReflection)
+                    //endForEach
                 }
                 .scrollContentBackground(.hidden)
                 .background(Color.mint)
+                    
                 
                 //endList
             }
@@ -51,9 +73,19 @@ struct EmotionView: View {
         //endZStack
     }
     //endbody
+    
+    func deleteReflection(at offsets: IndexSet) {
+        for index in offsets {
+            let reflectionToDelete = reflections[index]
+            context.delete(reflectionToDelete)
+        }
+    }
+    // end deleteFriend function
+    
 }
 //endstruct
 
 #Preview {
     EmotionView()
+        .modelContainer(for: EmotionReflection.self, inMemory: true)
 }

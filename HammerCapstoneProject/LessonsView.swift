@@ -9,6 +9,13 @@ import SwiftUI
 import SwiftData
 
 struct LessonsView: View {
+    @Query(sort: \LessonsLearned.lessonStamp, order: .reverse) private var lessons: [LessonsLearned]
+    @Environment(\.modelContext) private var context
+    @State private var newLesson = ""
+    @State private var newLStamp = Date.now
+    @State private var selectedLessonsLearned: LessonsLearned?
+
+    
     var body: some View {
         ZStack {
             Color.teal
@@ -19,7 +26,7 @@ struct LessonsView: View {
                     .fontWeight(.bold)
                     .foregroundColor(/*@START_MENU_TOKEN@*/Color(hue: 0.071, saturation: 0.208, brightness: 0.979)/*@END_MENU_TOKEN@*/)
                 
-                DatePicker(selection: .constant(Date()), displayedComponents: .date, label: { TextField("What did you learn today?", text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/) })
+                DatePicker(selection: $newLStamp, displayedComponents: .date, label: { TextField("What did you learn today?", text: $newLesson) })
                         .frame(maxWidth: .infinity)
                         .padding(EdgeInsets(top: 5, leading: 15, bottom: 5, trailing: 15))
                         .background(Color.white)
@@ -27,7 +34,10 @@ struct LessonsView: View {
                         .cornerRadius(10)
                 
                 Button {
-                    
+                    let newLessonLearned = LessonsLearned(lessonLearned: newLesson, lessonStamp: newLStamp)
+                    context.insert(newLessonLearned)
+                    newLesson = ""
+                    newLStamp = Date.now
                 } label: {
                     Text("Save Entry")
                         .fontWeight(.medium)
@@ -38,7 +48,19 @@ struct LessonsView: View {
                 }
                 
                 List {
-                    /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Content@*/Text("Content")/*@END_MENU_TOKEN@*/
+                    ForEach(lessons) { lesson in
+                        HStack{
+                            Text(lesson.lessonLearned)
+                            Spacer()
+                            Text(lesson.lessonStamp, format: .dateTime.month(.wide).day().year())
+                        }
+                        .onTapGesture {
+                            selectedLessonsLearned = lesson
+                        }
+                        //endHStack
+                    }
+                    .onDelete(perform: deleteLesson)
+                    //endForEach
                 }
                 .scrollContentBackground(.hidden)
                 .background(Color.teal)
@@ -49,8 +71,19 @@ struct LessonsView: View {
         }
         //endZStack
     }
+    //end body
+    
+    func deleteLesson(at offsets: IndexSet) {
+        for index in offsets {
+            let lessonToDelete = lessons[index]
+            context.delete(lessonToDelete)
+        }
+    }
+    // end deleteFriend function
 }
+//end struct
 
 #Preview {
     LessonsView()
+        .modelContainer(for: LessonsLearned.self, inMemory: true)
 }
