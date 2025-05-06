@@ -29,9 +29,9 @@ struct ContentView: View {
                         .foregroundColor(Color(red: 0.003, green: 0.371, blue: 0.565))
                         .multilineTextAlignment(.center)
                     
-                    
-                    Spacer()
-                    
+                    Text("")
+                    Text("")
+                    Text("")
                     
                     NavigationLink(destination: GratitudeView()) { Text("Add A Moment of Gratitude")
                             .fontWeight(.medium)
@@ -75,6 +75,7 @@ struct ContentView: View {
             }
             //end ZStack
         }
+        .accentColor(.white)
         //end NavStack
     }
     //end body
