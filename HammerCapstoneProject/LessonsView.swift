@@ -65,6 +65,15 @@ struct LessonsView: View {
                 .scrollContentBackground(.hidden)
                 .background(Color.teal)
                 //endList
+                
+                .sheet(item: $selectedLessonsLearned) { lesson in
+                    NavigationStack {
+                        EditLessonsView(lesson: lesson)
+                    }
+                    // end Navigation Stack
+                }
+                // end .sheet
+                
             }
             //endVStack
             .padding()

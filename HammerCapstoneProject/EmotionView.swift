@@ -63,9 +63,16 @@ struct EmotionView: View {
                 }
                 .scrollContentBackground(.hidden)
                 .background(Color.mint)
-                    
-                
                 //endList
+                
+                .sheet(item: $selectedEmotionReflection) { reflection in
+                    NavigationStack {
+                        EditEmotionView(reflection: reflection)
+                    }
+                    // end Navigation Stack
+                }
+                // end .sheet
+                
             }
             //endVStack
             .padding()
